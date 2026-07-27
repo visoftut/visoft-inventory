@@ -16,7 +16,26 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+
+    $products = \App\Models\Product::where('user_id', $user->id)->get();
+
+    $stats = [
+        'total_products'  => $products->count(),
+        'low_stock'       => $products->where('stock', '<', 10)->where('stock', '>', 0)->count(),
+        'out_of_stock'    => $products->where('stock', 0)->count(),
+        'inventory_value' => $products->sum(fn($p) => $p->price * $p->stock),
+    ];
+
+    $low_stock_products = \App\Models\Product::where('user_id', $user->id)
+        ->where('stock', '<', 10)
+        ->orderBy('stock', 'asc')
+        ->get();
+
+    return Inertia::render('Dashboard', [
+        'stats'             => $stats,
+        'low_stock_products' => $low_stock_products,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Rutas de Productos — protegidas por autenticación
