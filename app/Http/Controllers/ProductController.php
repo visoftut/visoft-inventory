@@ -8,11 +8,6 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-     // Proteger todas las rutas — solo usuarios logueados
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     // LISTAR todos los productos
     public function index()

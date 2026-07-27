@@ -1,0 +1,192 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { useState } from 'react';
+import BarcodeScanner from '@/Components/BarcodeScanner';
+
+export default function Create({ auth }) {
+    const [showScanner, setShowScanner] = useState(false);
+
+    const { data, setData, post, processing, errors } = useForm({
+        name: '',
+        barcode: '',
+        description: '',
+        price: '',
+        stock: '',
+        unit: 'unit',
+        category: '',
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post('/products');
+    };
+
+    const handleScan = (barcode) => {
+        setData('barcode', barcode);
+        setShowScanner(false);
+    };
+
+    return (
+        <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                        ➕ Nuevo Producto
+                    </h2>
+                    <Link
+                        href="/products"
+                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+                    >
+                        ← Volver
+                    </Link>
+                </div>
+            }
+        >
+            <Head title="Nuevo Producto" />
+
+            {/* Modal del escáner */}
+            {showScanner && (
+                <BarcodeScanner
+                    onScan={handleScan}
+                    onClose={() => setShowScanner(false)}
+                />
+            )}
+
+            <div className="py-6 px-4 max-w-2xl mx-auto">
+                <div className="bg-white rounded-lg shadow p-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+
+                        {/* Nombre */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Nombre del Producto *
+                            </label>
+                            <input
+                                type="text"
+                                value={data.name}
+                                onChange={e => setData('name', e.target.value)}
+                                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                placeholder="Ej: Coca Cola 500ml"
+                            />
+                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                        </div>
+
+                        {/* Código de Barra con botón de cámara */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Código de Barra
+                            </label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={data.barcode}
+                                    onChange={e => setData('barcode', e.target.value)}
+                                    className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    placeholder="Ej: 7501234567890"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowScanner(true)}
+                                    className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-lg"
+                                >
+                                    📷
+                                </button>
+                            </div>
+                            {errors.barcode && <p className="text-red-500 text-xs mt-1">{errors.barcode}</p>}
+                        </div>
+
+                        {/* Precio y Stock */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Precio *
+                                </label>
+                                <input
+                                    type="number"
+                                    value={data.price}
+                                    onChange={e => setData('price', e.target.value)}
+                                    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    placeholder="0.00"
+                                    step="0.01"
+                                />
+                                {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Stock *
+                                </label>
+                                <input
+                                    type="number"
+                                    value={data.stock}
+                                    onChange={e => setData('stock', e.target.value)}
+                                    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    placeholder="0"
+                                />
+                                {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
+                            </div>
+                        </div>
+
+                        {/* Unidad y Categoría */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Unidad *
+                                </label>
+                                <select
+                                    value={data.unit}
+                                    onChange={e => setData('unit', e.target.value)}
+                                    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                >
+                                    <option value="unit">Unidad</option>
+                                    <option value="kg">Kilogramo</option>
+                                    <option value="lb">Libra</option>
+                                    <option value="liter">Litro</option>
+                                    <option value="box">Caja</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Categoría
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.category}
+                                    onChange={e => setData('category', e.target.value)}
+                                    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    placeholder="Ej: Bebidas"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Descripción */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Descripción
+                            </label>
+                            <textarea
+                                value={data.description}
+                                onChange={e => setData('description', e.target.value)}
+                                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                rows="3"
+                                placeholder="Descripción opcional del producto"
+                            />
+                        </div>
+
+                        {/* Botón Submit */}
+                        <div className="pt-4">
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-3 rounded-lg transition"
+                            >
+                                {processing ? 'Guardando...' : '💾 Guardar Producto'}
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
