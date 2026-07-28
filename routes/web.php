@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,14 @@ Route::get('/dashboard', function () {
 // Rutas de Productos — protegidas por autenticación
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class);
+
+    // Rutas de movimientos de stock
+    Route::get('products/{product}/movements', [StockMovementController::class, 'index'])
+        ->name('products.movements.index');
+    Route::get('products/{product}/movements/create', [StockMovementController::class, 'create'])
+        ->name('products.movements.create');
+    Route::post('products/{product}/movements', [StockMovementController::class, 'store'])
+        ->name('products.movements.store');
 });
 
 Route::middleware('auth')->group(function () {

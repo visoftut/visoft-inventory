@@ -127,20 +127,26 @@ export default function Index({ auth, products, search }) {
                                                 {product.stock} {product.unit}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-center space-x-2">
-                                            <Link
-                                                href={`/products/${product.id}/edit`}
-                                                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
-                                            >
-                                                Editar
-                                            </Link>
-                                            <button
-                                                onClick={() => handleDelete(product.id)}
-                                                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
-                                            >
-                                                Eliminar
-                                            </button>
-                                        </td>
+                                      <td className="px-4 py-3 text-center space-x-2">
+                                         <Link
+                                             href={`/products/${product.id}/movements`}
+                                             className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs"
+                                         >
+                                             📈 Stock
+                                         </Link>
+                                         <Link
+                                             href={`/products/${product.id}/edit`}
+                                             className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+                                         >
+                                           Editar
+                                         </Link>
+                                         <button
+                                             onClick={() => handleDelete(product.id)}
+                                             className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
+                                         >
+                                           Eliminar
+                                         </button>
+                                      </td>
                                     </tr>
                                 ))}
                             </tbody>
