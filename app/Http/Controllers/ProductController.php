@@ -10,17 +10,28 @@ class ProductController extends Controller
 {
 
     // LISTAR todos los productos
-    public function index()
-    {
-        $user = auth()->user();
-        $products = Product::where('user_id', $user->id)
-                          ->orderBy('created_at', 'desc')
-                          ->get();
+public function index(Request $request)
+{
+    $user = auth()->user();
 
-        return Inertia::render('Products/Index', [
-            'products' => $products
-        ]);
+    $query = Product::where('user_id', $user->id);
+
+    // Búsqueda por nombre o código de barra
+    if ($request->search) {
+        $query->where(function($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('barcode', 'like', '%' . $request->search . '%')
+              ->orWhere('category', 'like', '%' . $request->search . '%');
+        });
     }
+
+    $products = $query->orderBy('created_at', 'desc')->get();
+
+    return Inertia::render('Products/Index', [
+        'products' => $products,
+        'search'   => $request->search ?? '',
+    ]);
+}
 
     // MOSTRAR formulario de creación
     public function create()
