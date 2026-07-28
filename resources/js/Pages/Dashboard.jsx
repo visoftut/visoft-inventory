@@ -7,7 +7,7 @@ export default function Dashboard({ auth, stats, low_stock_products }) {
             user={auth.user}
             header={
                 <h2 className="text-xl font-semibold text-gray-800">
-                    📊 Dashboard — VIsoft Inventory
+                    📊 Dashboard — Visoft Inventory
                 </h2>
             }
         >
