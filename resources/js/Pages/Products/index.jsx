@@ -1,9 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import BarcodeScanner from '@/Components/BarcodeScanner';
 
 export default function Index({ auth, products, search }) {
     const [searchTerm, setSearchTerm] = useState(search || '');
+    const [showScanner, setShowScanner] = useState(false);
 
     const handleSearch = (e) => {
         const value = e.target.value;
@@ -15,6 +17,14 @@ export default function Index({ auth, products, search }) {
         );
     };
 
+    const handleScan = (barcode) => {
+    setSearchTerm(barcode);
+    setShowScanner(false);
+    router.get('/products',
+        { search: barcode },
+        { preserveState: true, replace: true }
+    );
+};
     const handleDelete = (id) => {
         if (confirm('¿Estás seguro de eliminar este producto?')) {
             router.delete(`/products/${id}`);
@@ -43,15 +53,25 @@ export default function Index({ auth, products, search }) {
             <div className="py-6 px-4 max-w-7xl mx-auto space-y-4">
 
                 {/* Barra de búsqueda */}
-                <div className="bg-white rounded-lg shadow p-4">
-                    <div className="relative">
-                        <span className="absolute left-3 top-2.5 text-gray-400 text-lg">🔍</span>
-                        <input
-                            type="text"
-                            value={searchTerm}
-                            onChange={handleSearch}
-                            placeholder="Buscar por nombre, código de barra o categoría..."
-                            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                {/* Scanner modal */}
+                {showScanner && (
+                    <BarcodeScanner
+                        onScan={handleScan}
+                        onClose={() => setShowScanner(false)}
+                    />
+                )}
+
+            {/* Barra de búsqueda */}
+           <div className="bg-white rounded-lg shadow p-4">
+               <div className="relative flex gap-2">
+                   <div className="relative flex-1">
+                       <span className="absolute left-3 top-2.5 text-gray-400 text-lg">🔍</span>
+                       <input
+                           type="text"
+                           value={searchTerm}
+                           onChange={handleSearch}
+                           placeholder="Buscar por nombre, código de barra o categoría..."
+                           className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                         {searchTerm && (
                             <button
@@ -65,12 +85,19 @@ export default function Index({ auth, products, search }) {
                             </button>
                         )}
                     </div>
-                    {searchTerm && (
-                        <p className="text-xs text-gray-500 mt-2">
-                            {products.length} resultado(s) para "{searchTerm}"
-                        </p>
-                    )}
+                    <button
+                        onClick={() => setShowScanner(true)}
+                        className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-lg"
+                    >
+                        📷
+                    </button>
                 </div>
+                {searchTerm && (
+                     <p className="text-xs text-gray-500 mt-2">
+                         {products.length} resultado(s) para "{searchTerm}"
+                     </p>
+                )}
+           </div>
 
                 {/* Si no hay productos */}
                 {products.length === 0 && (
