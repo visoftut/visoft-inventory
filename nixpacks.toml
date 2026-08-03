@@ -1,8 +1,9 @@
 [phases.setup]
-nixPkgs = ['php83', 'nodejs_20', 'npm-10_x']
+nixPkgs = ['php83', 'nodejs']
 
 [phases.install]
 cmds = [
+    'node --version',
     'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer',
     'php /usr/local/bin/composer install --no-dev --ignore-platform-reqs --no-scripts',
     'npm install --force'
