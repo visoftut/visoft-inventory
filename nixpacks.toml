@@ -1,8 +1,12 @@
 [phases.setup]
-nixPkgs = ['php83', 'php83Packages.composer', 'php83Extensions.mbstring', 'php83Extensions.xml', 'php83Extensions.tokenizer', 'php83Extensions.pdo', 'php83Extensions.pdo_mysql', 'php83Extensions.curl', 'php83Extensions.fileinfo', 'php83Extensions.openssl', 'php83Extensions.bcmath', 'php83Extensions.ctype', 'nodejs_18', 'npm-9_x']
+nixPkgs = ['php83', 'nodejs_18', 'npm-9_x']
 
 [phases.install]
-cmds = ['composer install --no-dev --ignore-platform-reqs', 'npm ci']
+cmds = [
+    'curl -sS https://getcomposer.org/installer | php83 -- --install-dir=/usr/local/bin --filename=composer',
+    'composer install --no-dev --ignore-platform-reqs',
+    'npm ci'
+]
 
 [phases.build]
 cmds = ['npm run build']
