@@ -4,7 +4,7 @@ nixPkgs = ['php83', 'nodejs']
 [phases.install]
 cmds = [
     'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer',
-    'php /usr/local/bin/composer install --no-dev --ignore-platform-reqs --no-scripts',
+    'php /usr/local/bin/composer install --no-dev --ignore-platform-reqs',
     'npm install --force',
     'npm install @rolldown/binding-linux-x64-gnu --force'
 ]
@@ -12,5 +12,5 @@ cmds = [
 [phases.build]
 cmds = ['npm run build']
 
-[phases.start]
-cmds = ['php --version && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT']
+[start]
+cmd = 'php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT'
