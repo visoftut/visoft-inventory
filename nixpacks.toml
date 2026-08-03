@@ -3,7 +3,7 @@ nixPkgs = ['php83', 'nodejs_18', 'npm-9_x']
 
 [phases.install]
 cmds = [
-    'curl -sS https://getcomposer.org/installer | php83 -- --install-dir=/usr/local/bin --filename=composer',
+    'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer',
     'composer install --no-dev --ignore-platform-reqs',
     'npm ci'
 ]
