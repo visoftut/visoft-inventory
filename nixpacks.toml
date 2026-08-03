@@ -1,12 +1,11 @@
 [phases.setup]
-nixPkgs = ['php83', 'nodejs']
+nixPkgs = ['php84', 'nodejs']
 
 [phases.install]
 cmds = [
-    'which php && php --version',
+    'php --version',
     'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer',
-    'php /usr/local/bin/composer install --no-dev --ignore-platform-reqs --no-scripts',
-    'php /usr/local/bin/composer dump-autoload --optimize',
+    'php /usr/local/bin/composer install --no-dev --ignore-platform-reqs',
     'npm install --force',
     'npm install @rolldown/binding-linux-x64-gnu --force'
 ]
