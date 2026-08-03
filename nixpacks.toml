@@ -3,9 +3,9 @@ nixPkgs = ['php83', 'nodejs']
 
 [phases.install]
 cmds = [
-    'node --version',
     'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer',
     'php /usr/local/bin/composer install --no-dev --ignore-platform-reqs --no-scripts',
+    'rm -f package-lock.json',
     'npm install --force'
 ]
 
