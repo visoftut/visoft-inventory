@@ -14,4 +14,4 @@ cmds = [
 cmds = ['npm run build']
 
 [start]
-cmd = 'php artisan migrate:fresh --force && php artisan serve --host=0.0.0.0 --port=$PORT'
+cmd = 'php artisan migrate --force 2>/dev/null; php artisan serve --host=0.0.0.0 --port=$PORT'
